@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Link from "next/link";
+import { NavBar } from "@/components/layout/NavBar";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -30,29 +30,7 @@ export default function RootLayout({
       >
         <div className="min-h-screen flex flex-col">
           {/* Top Navigation Bar */}
-          <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
-            <div className="container">
-              <div className="flex items-center justify-between h-16">
-                <Link href="/" className="text-xl font-bold text-gray-900 hover:text-blue-600 transition-colors">
-                  Creative Templates App
-                </Link>
-                <div className="flex items-center gap-6">
-                  <Link
-                    href="/templates"
-                    className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                  >
-                    Templates
-                  </Link>
-                  <Link
-                    href="/designs"
-                    className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                  >
-                    Designs
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </nav>
+          <NavBar />
 
           {/* Main Content */}
           <main className="flex-1">
