@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'use';
+import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Canvas } from '@/features/canvas/components/Canvas';
@@ -22,8 +22,9 @@ export default function TemplateDetailPage() {
   const template = {
     id: templateId,
     name: 'Sample Template',
-    description: 'This is a sample template',
+    channel: 'instagram' as const,
     status: 'draft' as const,
+    canvas: initialCanvasState,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
@@ -32,8 +33,10 @@ export default function TemplateDetailPage() {
     (layer) => layer.id === canvasState.selectedLayerId
   ) || null;
 
-  const handleLayerSelect = (layerId: string) => {
-    setCanvasState(selectLayer(canvasState, layerId));
+  const handleLayerSelect = (layerId: string | null) => {
+    if (layerId) {
+      setCanvasState(selectLayer(canvasState, layerId));
+    }
   };
 
   const handleUseTemplate = () => {
@@ -48,7 +51,7 @@ export default function TemplateDetailPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 mb-1">{template.name}</h1>
-          <p className="text-gray-600">{template.description}</p>
+          <p className="text-gray-600 capitalize">{template.channel} Template</p>
         </div>
         <div className="flex gap-3">
           <Button variant="outline" onClick={() => router.push('/templates')}>

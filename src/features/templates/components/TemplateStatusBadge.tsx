@@ -8,10 +8,16 @@ interface TemplateStatusBadgeProps {
 export function TemplateStatusBadge({ status }: TemplateStatusBadgeProps) {
   const variantMap = {
     draft: 'default' as const,
-    published: 'success' as const,
+    active: 'success' as const,
     archived: 'warning' as const,
   };
 
-  return <Badge variant={variantMap[status]}>{status}</Badge>;
+  const labelMap = {
+    draft: 'Draft',
+    active: 'Active',
+    archived: 'Archived',
+  };
+
+  return <Badge variant={variantMap[status]}>{labelMap[status]}</Badge>;
 }
 

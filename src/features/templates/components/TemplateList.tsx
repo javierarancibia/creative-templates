@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { Template } from '../types';
 import { Card, CardBody } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { TemplateStatusBadge } from './TemplateStatusBadge';
 
 interface TemplateListProps {
   templates: Template[];
@@ -26,32 +26,23 @@ export function TemplateList({ templates }: TemplateListProps) {
           <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
             <CardBody>
               <div className="aspect-video bg-gray-100 rounded-md mb-4 flex items-center justify-center relative overflow-hidden">
-                {template.thumbnail ? (
-                  <Image src={template.thumbnail} alt={template.name} fill className="object-cover" />
-                ) : (
-                  <span className="text-gray-400">No preview</span>
-                )}
+                <span className="text-gray-400">Canvas Preview</span>
               </div>
               <div className="flex items-start justify-between mb-2">
                 <h3 className="font-semibold text-lg">{template.name}</h3>
                 <TemplateStatusBadge status={template.status} />
               </div>
-              <p className="text-gray-600 text-sm line-clamp-2">{template.description}</p>
+              <div className="flex items-center gap-2">
+                <Badge variant="default">{template.channel}</Badge>
+                <span className="text-gray-500 text-xs">
+                  {new Date(template.createdAt).toLocaleDateString()}
+                </span>
+              </div>
             </CardBody>
           </Card>
         </Link>
       ))}
     </div>
   );
-}
-
-function TemplateStatusBadge({ status }: { status: Template['status'] }) {
-  const variantMap = {
-    draft: 'default' as const,
-    published: 'success' as const,
-    archived: 'warning' as const,
-  };
-
-  return <Badge variant={variantMap[status]}>{status}</Badge>;
 }
 

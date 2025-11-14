@@ -16,7 +16,7 @@ export function TemplateForm({ initialData, onSubmit, onCancel }: TemplateFormPr
   const [formData, setFormData] = useState<TemplateFormData>(
     initialData || {
       name: '',
-      description: '',
+      channel: 'instagram',
       status: 'draft',
     }
   );
@@ -36,19 +36,17 @@ export function TemplateForm({ initialData, onSubmit, onCancel }: TemplateFormPr
         required
       />
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Description
-        </label>
-        <textarea
-          value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          placeholder="Enter template description"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          rows={4}
-          required
-        />
-      </div>
+      <Select
+        label="Channel"
+        value={formData.channel}
+        onChange={(e) => setFormData({ ...formData, channel: e.target.value as TemplateFormData['channel'] })}
+        options={[
+          { value: 'facebook', label: 'Facebook' },
+          { value: 'instagram', label: 'Instagram' },
+          { value: 'linkedin', label: 'LinkedIn' },
+          { value: 'display', label: 'Display Ads' },
+        ]}
+      />
 
       <Select
         label="Status"
@@ -56,7 +54,7 @@ export function TemplateForm({ initialData, onSubmit, onCancel }: TemplateFormPr
         onChange={(e) => setFormData({ ...formData, status: e.target.value as TemplateFormData['status'] })}
         options={[
           { value: 'draft', label: 'Draft' },
-          { value: 'published', label: 'Published' },
+          { value: 'active', label: 'Active' },
           { value: 'archived', label: 'Archived' },
         ]}
       />

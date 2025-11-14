@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { TemplateList } from '@/features/templates/components/TemplateList';
+import { Template } from '@/features/templates/types';
 
 export default function TemplatesPage() {
   // TODO: Fetch templates from API
-  const templates = [];
+  const templates: Template[] = [];
 
   return (
     <div className="container py-8">
