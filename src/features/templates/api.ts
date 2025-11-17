@@ -1,5 +1,6 @@
 // Front-end data helpers that call API routes
 import { Template, TemplateChannel, TemplateStatus } from './types';
+import type { CanvasState } from '../canvas/canvasTypes';
 
 /**
  * Fetches all templates from the API
@@ -102,6 +103,20 @@ export async function updateTemplate(
   }
 
   return response.json();
+}
+
+/**
+ * Updates only the canvas state of a template
+ * @param id - Template ID
+ * @param canvas - Canvas state to save
+ * @returns Promise<Template> - The updated template
+ * @throws Error if the request fails or template not found
+ */
+export async function updateTemplateCanvas(
+  id: string,
+  canvas: CanvasState
+): Promise<Template> {
+  return updateTemplate(id, { canvas });
 }
 
 /**

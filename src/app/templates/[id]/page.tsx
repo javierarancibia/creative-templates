@@ -7,23 +7,9 @@ import { Card, CardHeader, CardBody } from '@/components/ui/Card';
 import { TemplateForm } from '@/features/templates/components/TemplateForm';
 import { TemplateStatusBadge } from '@/features/templates/components/TemplateStatusBadge';
 import { Template, TemplateChannel, TemplateStatus } from '@/features/templates/types';
-import { fetchTemplate, updateTemplate } from '@/features/templates/api';
-
-// Placeholder components for canvas and AI helper
-function CanvasEditorPlaceholder() {
-  return (
-    <Card>
-      <CardHeader>
-        <h2 className="text-xl font-semibold">Canvas Editor</h2>
-      </CardHeader>
-      <CardBody>
-        <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center">
-          <p className="text-gray-500">Canvas editor will be implemented here</p>
-        </div>
-      </CardBody>
-    </Card>
-  );
-}
+import { fetchTemplate, updateTemplate, updateTemplateCanvas } from '@/features/templates/api';
+import { CanvasEditor } from '@/features/canvas/components/CanvasEditor';
+import { CanvasState, createEmptyCanvas } from '@/features/canvas/canvasTypes';
 
 function AICopyHelperPlaceholder() {
   return (
@@ -84,6 +70,19 @@ export default function TemplateDetailPage() {
       console.error('Error updating template:', err);
       setUpdateError(err instanceof Error ? err.message : 'Failed to update template');
       throw err; // Re-throw to let the form handle it
+    }
+  };
+
+  const handleSaveCanvas = async (canvas: CanvasState) => {
+    try {
+      const updatedTemplate = await updateTemplate(templateId, {
+        canvas,
+      });
+      setTemplate(updatedTemplate);
+      console.log('Canvas saved successfully');
+    } catch (err) {
+      console.error('Error saving canvas:', err);
+      setUpdateError(err instanceof Error ? err.message : 'Failed to save canvas');
     }
   };
 
@@ -152,8 +151,20 @@ export default function TemplateDetailPage() {
           </CardBody>
         </Card>
 
-        {/* Canvas Editor Placeholder */}
-        <CanvasEditorPlaceholder />
+        {/* Canvas Editor */}
+        <Card>
+          <CardHeader>
+            <h2 className="text-xl font-semibold">Canvas Editor</h2>
+          </CardHeader>
+          <CardBody className="p-0">
+            <div className="h-[800px]">
+              <CanvasEditor
+                initialCanvas={template.canvas || createEmptyCanvas()}
+                onSave={handleSaveCanvas}
+              />
+            </div>
+          </CardBody>
+        </Card>
 
         {/* AI Copy Helper Placeholder */}
         <AICopyHelperPlaceholder />
