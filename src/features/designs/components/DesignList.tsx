@@ -1,9 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { Design } from '../types';
 import { Card, CardBody } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { CanvasPreview } from '@/features/canvas/components/CanvasPreview';
 
 interface DesignListProps {
   designs: Design[];
@@ -24,17 +25,22 @@ export function DesignList({ designs }: DesignListProps) {
         <Link key={design.id} href={`/designs/${design.id}`}>
           <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
             <CardBody>
-              <div className="aspect-video bg-gray-100 rounded-md mb-4 flex items-center justify-center relative overflow-hidden">
-                {design.thumbnail ? (
-                  <Image src={design.thumbnail} alt={design.name} fill className="object-cover" />
-                ) : (
-                  <span className="text-gray-400">No preview</span>
-                )}
+              <CanvasPreview
+                canvas={design.canvas}
+                className="aspect-video rounded-md mb-4"
+              />
+              <div className="flex items-start justify-between mb-2">
+                <h3 className="font-semibold text-lg">{design.name}</h3>
+                <Badge variant={design.status === 'active' ? 'success' : design.status === 'archived' ? 'warning' : 'default'}>
+                  {design.status}
+                </Badge>
               </div>
-              <h3 className="font-semibold text-lg mb-2">{design.name}</h3>
-              <p className="text-gray-500 text-sm">
-                Created {new Date(design.createdAt).toLocaleDateString()}
-              </p>
+              <div className="flex items-center gap-2">
+                <Badge variant="default">{design.channel}</Badge>
+                <span className="text-gray-500 text-xs">
+                  {new Date(design.createdAt).toLocaleDateString()}
+                </span>
+              </div>
             </CardBody>
           </Card>
         </Link>
