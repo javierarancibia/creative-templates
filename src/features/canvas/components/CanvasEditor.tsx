@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { CanvasState } from '../canvasTypes';
 import { nudgeLayer, selectLayer, bringLayerForward, sendLayerBackward } from '../canvasState';
 import { Canvas } from './Canvas';
@@ -11,16 +11,21 @@ import { PropertyPanel } from './PropertyPanel';
 interface CanvasEditorProps {
   initialCanvas: CanvasState;
   onSave?: (canvas: CanvasState) => void;
+  onCanvasChange?: (canvas: CanvasState) => void;
 }
 
-export function CanvasEditor({ initialCanvas, onSave }: CanvasEditorProps) {
+export function CanvasEditor({ initialCanvas, onSave, onCanvasChange }: CanvasEditorProps) {
   const [canvas, setCanvas] = useState<CanvasState>(initialCanvas);
   const [hasChanges, setHasChanges] = useState(false);
 
-  const handleCanvasChange = (next: CanvasState) => {
+  const handleCanvasChange = useCallback((next: CanvasState) => {
     setCanvas(next);
     setHasChanges(true);
-  };
+    // Notify parent of canvas changes
+    if (onCanvasChange) {
+      onCanvasChange(next);
+    }
+  }, [onCanvasChange]);
 
   const handleSave = () => {
     if (onSave) {
@@ -79,7 +84,7 @@ export function CanvasEditor({ initialCanvas, onSave }: CanvasEditorProps) {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [canvas]);
+  }, [canvas, handleCanvasChange]);
 
   return (
     <div className="flex flex-col h-full">

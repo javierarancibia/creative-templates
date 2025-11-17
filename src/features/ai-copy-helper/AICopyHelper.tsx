@@ -1,59 +1,131 @@
 'use client';
 
 import { useState } from 'react';
+import { Card, CardHeader, CardBody } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
 
-export function AICopyHelper() {
-  const [prompt, setPrompt] = useState('');
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
+/**
+ * Stubbed AI copy generation function
+ * This can be easily replaced with a real AI API call later
+ */
+function generateAICopy(description: string): string {
+  if (!description.trim()) {
+    return 'Please provide a product description to generate ad copy.';
+  }
+
+  // Simple template-based generation for now
+  const templates = [
+    `Boost your ${description} with this high-performing, on-brand ad copy that converts!`,
+    `Discover the power of ${description}. Transform your marketing today!`,
+    `${description} - Elevate your brand with compelling, results-driven messaging.`,
+    `Unlock the potential of ${description}. Drive engagement and sales effortlessly.`,
+  ];
+
+  // Use description length to deterministically pick a template
+  const index = description.length % templates.length;
+  return templates[index];
+}
+
+interface AICopyHelperProps {
+  /**
+   * Callback to apply generated text to selected text layer
+   */
+  onApplyToSelected?: (text: string) => void;
+
+  /**
+   * Whether a text layer is currently selected
+   */
+  hasSelectedTextLayer: boolean;
+}
+
+export function AICopyHelper({ onApplyToSelected, hasSelectedTextLayer }: AICopyHelperProps) {
+  const [description, setDescription] = useState('');
+  const [generatedText, setGeneratedText] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const handleGenerate = async () => {
-    setLoading(true);
-    // TODO: Implement AI copy generation
-    setTimeout(() => {
-      setSuggestions([
-        'Sample suggestion 1',
-        'Sample suggestion 2',
-        'Sample suggestion 3',
-      ]);
-      setLoading(false);
-    }, 1000);
+    setIsGenerating(true);
+
+    // Simulate API delay
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    const generated = generateAICopy(description);
+    setGeneratedText(generated);
+    setIsGenerating(false);
+  };
+
+  const handleInsert = () => {
+    if (onApplyToSelected && generatedText) {
+      onApplyToSelected(generatedText);
+    }
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4">
-      <h3 className="font-semibold mb-3">AI Copy Helper</h3>
-      <div className="space-y-3">
-        <Input
-          placeholder="Describe the copy you need..."
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-        />
-        <Button
-          variant="primary"
-          className="w-full"
-          onClick={handleGenerate}
-          disabled={loading || !prompt}
-        >
-          {loading ? 'Generating...' : 'Generate Copy'}
-        </Button>
-        {suggestions.length > 0 && (
-          <div className="space-y-2">
-            <p className="text-sm font-medium text-gray-700">Suggestions:</p>
-            {suggestions.map((suggestion, index) => (
-              <div
-                key={index}
-                className="p-2 bg-gray-50 rounded border border-gray-200 text-sm cursor-pointer hover:bg-gray-100"
-              >
-                {suggestion}
-              </div>
-            ))}
+    <Card>
+      <CardHeader>
+        <h2 className="text-xl font-semibold">AI Copy Helper</h2>
+      </CardHeader>
+      <CardBody>
+        <div className="space-y-4">
+          {/* Input Section */}
+          <div>
+            <label htmlFor="product-description" className="block text-sm font-medium text-gray-700 mb-2">
+              Product Description
+            </label>
+            <textarea
+              id="product-description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter your product description..."
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+              rows={4}
+            />
           </div>
-        )}
-      </div>
-    </div>
+
+          {/* Generate Button */}
+          <Button
+            variant="primary"
+            onClick={handleGenerate}
+            disabled={isGenerating || !description.trim()}
+            className="w-full"
+          >
+            {isGenerating ? 'Generating...' : 'Generate Ad Copy'}
+          </Button>
+
+          {/* Output Section */}
+          {generatedText && (
+            <div className="space-y-3">
+              <div className="border-t border-gray-200 pt-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Generated Copy
+                </label>
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                  <p className="text-gray-900 whitespace-pre-wrap">{generatedText}</p>
+                </div>
+              </div>
+
+              {/* Insert Button - Only shown when text layer is selected */}
+              {hasSelectedTextLayer && onApplyToSelected && (
+                <Button
+                  variant="outline"
+                  onClick={handleInsert}
+                  className="w-full"
+                >
+                  Insert into Selected Text Layer
+                </Button>
+              )}
+
+              {/* Helper text when no text layer is selected */}
+              {!hasSelectedTextLayer && (
+                <p className="text-sm text-gray-500 text-center">
+                  Select a text layer on the canvas to insert this copy
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      </CardBody>
+    </Card>
   );
 }
 

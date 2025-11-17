@@ -10,22 +10,9 @@ import { Template, TemplateChannel, TemplateStatus } from '@/features/templates/
 import { fetchTemplate, updateTemplate, updateTemplateCanvas } from '@/features/templates/api';
 import { createDesign } from '@/features/designs/api';
 import { CanvasEditor } from '@/features/canvas/components/CanvasEditor';
-import { CanvasState, createEmptyCanvas } from '@/features/canvas/canvasTypes';
-
-function AICopyHelperPlaceholder() {
-  return (
-    <Card>
-      <CardHeader>
-        <h2 className="text-xl font-semibold">AI Copy Helper</h2>
-      </CardHeader>
-      <CardBody>
-        <div className="p-6 bg-gray-100 rounded-lg flex items-center justify-center">
-          <p className="text-gray-500">AI copy helper will be implemented here</p>
-        </div>
-      </CardBody>
-    </Card>
-  );
-}
+import { CanvasState, createEmptyCanvas, TextLayer } from '@/features/canvas/canvasTypes';
+import { updateLayer } from '@/features/canvas/canvasState';
+import { AICopyHelper } from '@/features/ai-copy-helper/AICopyHelper';
 
 export default function TemplateDetailPage() {
   const params = useParams();
@@ -38,6 +25,7 @@ export default function TemplateDetailPage() {
   const [updateError, setUpdateError] = useState<string | null>(null);
   const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [creatingDesign, setCreatingDesign] = useState(false);
+  const [currentCanvas, setCurrentCanvas] = useState<CanvasState | null>(null);
 
   useEffect(() => {
     async function loadTemplate() {
@@ -118,6 +106,34 @@ export default function TemplateDetailPage() {
     }
   };
 
+  const handleCanvasChange = (canvas: CanvasState) => {
+    setCurrentCanvas(canvas);
+  };
+
+  const handleApplyAICopy = (text: string) => {
+    if (!currentCanvas || !currentCanvas.selectedLayerId) return;
+
+    const selectedLayer = currentCanvas.layers.find(l => l.id === currentCanvas.selectedLayerId);
+    if (!selectedLayer || selectedLayer.type !== 'text') return;
+
+    // Update the selected text layer with the AI-generated copy
+    const updatedCanvas = updateLayer(currentCanvas, currentCanvas.selectedLayerId, {
+      text,
+    } as Partial<TextLayer>);
+
+    setCurrentCanvas(updatedCanvas);
+
+    // Also save to template immediately
+    handleSaveCanvas(updatedCanvas);
+  };
+
+  // Check if selected layer is a text layer
+  const hasSelectedTextLayer = currentCanvas
+    ? currentCanvas.selectedLayerId !== null &&
+      currentCanvas.selectedLayerId !== undefined &&
+      currentCanvas.layers.find(l => l.id === currentCanvas.selectedLayerId)?.type === 'text'
+    : false;
+
   if (loading) {
     return (
       <div className="container py-8">
@@ -190,36 +206,45 @@ export default function TemplateDetailPage() {
           </CardBody>
         </Card>
 
-        {/* Canvas Editor */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Canvas Editor</h2>
-              {saveMessage && (
-                <div
-                  className={`px-4 py-2 rounded-md text-sm font-medium ${
-                    saveMessage.type === 'success'
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-red-100 text-red-800'
-                  }`}
-                >
-                  {saveMessage.text}
+        {/* Canvas Editor and AI Copy Helper - Side by Side */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="lg:col-span-2">            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-semibold">Canvas Editor</h2>
+                  {saveMessage && (
+                    <div
+                      className={`px-4 py-2 rounded-md text-sm font-medium ${
+                        saveMessage.type === 'success'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-red-100 text-red-800'
+                      }`}
+                    >
+                      {saveMessage.text}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          </CardHeader>
-          <CardBody className="p-0">
-            <div className="h-[800px]">
-              <CanvasEditor
-                initialCanvas={template.canvas || createEmptyCanvas()}
-                onSave={handleSaveCanvas}
-              />
-            </div>
-          </CardBody>
-        </Card>
+              </CardHeader>
+              <CardBody className="p-0">
+                <div className="h-[800px]">
+                  <CanvasEditor
+                    initialCanvas={template.canvas || createEmptyCanvas()}
+                    onSave={handleSaveCanvas}
+                    onCanvasChange={handleCanvasChange}
+                  />
+                </div>
+              </CardBody>
+            </Card>
+          </div>
 
-        {/* AI Copy Helper Placeholder */}
-        <AICopyHelperPlaceholder />
+        </div>
+      </div>
+      {/* AI Copy Helper - Takes 1/3 of the width */}
+      <div>
+        <AICopyHelper
+          onApplyToSelected={handleApplyAICopy}
+          hasSelectedTextLayer={hasSelectedTextLayer}
+        />
       </div>
     </div>
   );
