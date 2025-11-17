@@ -53,6 +53,7 @@ This application provides a complete solution for managing creative templates an
 - **Canvas Interactions**: [react-rnd](https://github.com/bokuweb/react-rnd) (drag & resize)
 - **Testing**: [Vitest 4](https://vitest.dev/) + [React Testing Library](https://testing-library.com/react)
 - **Linting**: [ESLint 9](https://eslint.org/) with Next.js config
+- **CI/CD**: [GitHub Actions](https://github.com/features/actions) (automated testing and linting)
 - **Package Manager**: npm
 
 ## How to Run Locally
@@ -341,6 +342,54 @@ Tests are located in `src/features/canvas/canvasState.test.ts`.
 - Integration tests for API routes
 - E2E tests with Playwright
 - Visual regression tests
+
+## Continuous Integration (CI)
+
+The project includes a GitHub Actions workflow that automatically runs on every push and pull request.
+
+### CI Workflow
+
+**Location**: `.github/workflows/ci.yml`
+
+**Triggers**:
+- Push to any branch
+- Pull requests to any branch
+
+**Jobs**:
+1. **Checkout code** - Uses `actions/checkout@v4`
+2. **Set up Node.js 20.x** - Uses `actions/setup-node@v4` with npm caching
+3. **Install dependencies** - Runs `npm ci` for fast, reliable installs
+4. **Run linting** - Executes `npm run lint` to check code quality
+5. **Run tests** - Executes `npm run test:run` to run all tests
+
+### CI Requirements
+
+- **No environment variables needed** - Tests run without Supabase connection
+- **No network access required** - All tests use jsdom and mock data
+- **No secrets required** - Workflow is self-contained and simple
+
+### Viewing CI Results
+
+After pushing to GitHub:
+1. Go to your repository on GitHub
+2. Click the **"Actions"** tab
+3. View workflow runs and their status
+4. Green checkmark ✅ = All checks passed
+5. Red X ❌ = Linting or tests failed
+
+### Local CI Simulation
+
+To run the same checks locally before pushing:
+
+```bash
+# Run linting
+npm run lint
+
+# Run tests
+npm run test:run
+```
+
+Both commands must pass for CI to succeed.
 
 ## Deployment
 

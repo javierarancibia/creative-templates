@@ -33,7 +33,6 @@ export function CanvasPreview({ canvas, className = '' }: CanvasPreviewProps) {
   const scaledHeight = canvas.height * scale;
 
   // Sort layers by zIndex for proper rendering order
-  console.log('Layers:', canvas.layers)
   const sortedLayers = [...canvas.layers].sort((a, b) => a.zIndex - b.zIndex);
 
   return (
