@@ -5,6 +5,7 @@ import { Template } from '../types';
 import { Card, CardBody } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { TemplateStatusBadge } from './TemplateStatusBadge';
+import { CanvasPreview } from '@/features/canvas/components/CanvasPreview';
 
 interface TemplateListProps {
   templates: Template[];
@@ -34,9 +35,10 @@ export function TemplateList({ templates }: TemplateListProps) {
         <Link key={template.id} href={`/templates/${template.id}`}>
           <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
             <CardBody>
-              <div className="aspect-video bg-gray-100 rounded-md mb-4 flex items-center justify-center relative overflow-hidden">
-                <span className="text-gray-400">Canvas Preview</span>
-              </div>
+              <CanvasPreview
+                canvas={template.canvas}
+                className="aspect-video rounded-md mb-4"
+              />
               <div className="flex items-start justify-between mb-2">
                 <h3 className="font-semibold text-lg">{template.name}</h3>
                 <TemplateStatusBadge status={template.status} />

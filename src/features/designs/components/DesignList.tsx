@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Design } from '../types';
 import { Card, CardBody } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { CanvasPreview } from '@/features/canvas/components/CanvasPreview';
 
 interface DesignListProps {
   designs: Design[];
@@ -24,9 +25,10 @@ export function DesignList({ designs }: DesignListProps) {
         <Link key={design.id} href={`/designs/${design.id}`}>
           <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
             <CardBody>
-              <div className="aspect-video bg-gray-100 rounded-md mb-4 flex items-center justify-center relative overflow-hidden">
-                <span className="text-gray-400">Canvas Preview</span>
-              </div>
+              <CanvasPreview
+                canvas={design.canvas}
+                className="aspect-video rounded-md mb-4"
+              />
               <div className="flex items-start justify-between mb-2">
                 <h3 className="font-semibold text-lg">{design.name}</h3>
                 <Badge variant={design.status === 'active' ? 'success' : design.status === 'archived' ? 'warning' : 'default'}>
