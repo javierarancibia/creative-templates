@@ -35,6 +35,7 @@ export default function TemplateDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [updateError, setUpdateError] = useState<string | null>(null);
+  const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => {
     async function loadTemplate() {
@@ -75,14 +76,17 @@ export default function TemplateDetailPage() {
 
   const handleSaveCanvas = async (canvas: CanvasState) => {
     try {
-      const updatedTemplate = await updateTemplate(templateId, {
-        canvas,
-      });
+      setSaveMessage(null);
+      const updatedTemplate = await updateTemplateCanvas(templateId, canvas);
       setTemplate(updatedTemplate);
-      console.log('Canvas saved successfully');
+      setSaveMessage({ type: 'success', text: 'Canvas saved successfully!' });
+
+      // Clear success message after 3 seconds
+      setTimeout(() => setSaveMessage(null), 3000);
     } catch (err) {
       console.error('Error saving canvas:', err);
-      setUpdateError(err instanceof Error ? err.message : 'Failed to save canvas');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to save canvas';
+      setSaveMessage({ type: 'error', text: errorMessage });
     }
   };
 
@@ -154,7 +158,20 @@ export default function TemplateDetailPage() {
         {/* Canvas Editor */}
         <Card>
           <CardHeader>
-            <h2 className="text-xl font-semibold">Canvas Editor</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold">Canvas Editor</h2>
+              {saveMessage && (
+                <div
+                  className={`px-4 py-2 rounded-md text-sm font-medium ${
+                    saveMessage.type === 'success'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-red-100 text-red-800'
+                  }`}
+                >
+                  {saveMessage.text}
+                </div>
+              )}
+            </div>
           </CardHeader>
           <CardBody className="p-0">
             <div className="h-[800px]">
