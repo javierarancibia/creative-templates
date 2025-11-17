@@ -4,24 +4,21 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardHeader, CardBody } from '@/components/ui/Card';
 import { TemplateForm } from '@/features/templates/components/TemplateForm';
-import { TemplateFormData } from '@/features/templates/types';
+import { TemplateChannel, TemplateStatus } from '@/features/templates/types';
 import { createTemplate } from '@/features/templates/api';
 
 export default function NewTemplatePage() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (data: TemplateFormData) => {
+  const handleSubmit = async (values: { name: string; channel: TemplateChannel; status: TemplateStatus }) => {
     try {
-      setIsSubmitting(true);
       setError(null);
 
       const template = await createTemplate({
-        name: data.name,
-        channel: data.channel,
-        status: data.status,
-        canvas: data.canvas,
+        name: values.name,
+        channel: values.channel,
+        status: values.status,
       });
 
       console.log('Template created successfully:', template);
@@ -31,7 +28,6 @@ export default function NewTemplatePage() {
     } catch (err) {
       console.error('Error creating template:', err);
       setError(err instanceof Error ? err.message : 'Failed to create template');
-      setIsSubmitting(false);
     }
   };
 
@@ -58,12 +54,8 @@ export default function NewTemplatePage() {
             <TemplateForm
               onSubmit={handleSubmit}
               onCancel={handleCancel}
+              submitLabel="Create Template"
             />
-            {isSubmitting && (
-              <div className="mt-4 text-center">
-                <p className="text-gray-600">Creating template...</p>
-              </div>
-            )}
           </CardBody>
         </Card>
       </div>

@@ -1,90 +1,162 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
-import { Canvas } from '@/features/canvas/components/Canvas';
-import { LayerList } from '@/features/canvas/components/LayerList';
-import { PropertyPanel } from '@/features/canvas/components/PropertyPanel';
-import { CanvasToolbar } from '@/features/canvas/components/CanvasToolbar';
-import { AICopyHelper } from '@/features/ai-copy-helper/AICopyHelper';
-import { initialCanvasState, selectLayer } from '@/features/canvas/canvasState';
-import { CanvasState } from '@/features/canvas/canvasTypes';
+import { Card, CardHeader, CardBody } from '@/components/ui/Card';
+import { TemplateForm } from '@/features/templates/components/TemplateForm';
+import { TemplateStatusBadge } from '@/features/templates/components/TemplateStatusBadge';
+import { Template, TemplateChannel, TemplateStatus } from '@/features/templates/types';
+import { fetchTemplate, updateTemplate } from '@/features/templates/api';
+
+// Placeholder components for canvas and AI helper
+function CanvasEditorPlaceholder() {
+  return (
+    <Card>
+      <CardHeader>
+        <h2 className="text-xl font-semibold">Canvas Editor</h2>
+      </CardHeader>
+      <CardBody>
+        <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center">
+          <p className="text-gray-500">Canvas editor will be implemented here</p>
+        </div>
+      </CardBody>
+    </Card>
+  );
+}
+
+function AICopyHelperPlaceholder() {
+  return (
+    <Card>
+      <CardHeader>
+        <h2 className="text-xl font-semibold">AI Copy Helper</h2>
+      </CardHeader>
+      <CardBody>
+        <div className="p-6 bg-gray-100 rounded-lg flex items-center justify-center">
+          <p className="text-gray-500">AI copy helper will be implemented here</p>
+        </div>
+      </CardBody>
+    </Card>
+  );
+}
 
 export default function TemplateDetailPage() {
   const params = useParams();
   const router = useRouter();
   const templateId = params.id as string;
 
-  const [canvasState, setCanvasState] = useState<CanvasState>(initialCanvasState);
+  const [template, setTemplate] = useState<Template | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [updateError, setUpdateError] = useState<string | null>(null);
 
-  // TODO: Fetch template data from API
-  const template = {
-    id: templateId,
-    name: 'Sample Template',
-    channel: 'instagram' as const,
-    status: 'draft' as const,
-    canvas: initialCanvasState,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  };
+  useEffect(() => {
+    async function loadTemplate() {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await fetchTemplate(templateId);
+        setTemplate(data);
+      } catch (err) {
+        console.error('Error loading template:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load template');
+      } finally {
+        setLoading(false);
+      }
+    }
 
-  const selectedLayer = canvasState.layers.find(
-    (layer) => layer.id === canvasState.selectedLayerId
-  ) || null;
+    loadTemplate();
+  }, [templateId]);
 
-  const handleLayerSelect = (layerId: string | null) => {
-    if (layerId) {
-      setCanvasState(selectLayer(canvasState, layerId));
+  const handleUpdateTemplate = async (values: { name: string; channel: TemplateChannel; status: TemplateStatus }) => {
+    try {
+      setUpdateError(null);
+
+      const updatedTemplate = await updateTemplate(templateId, {
+        name: values.name,
+        channel: values.channel,
+        status: values.status,
+      });
+
+      setTemplate(updatedTemplate);
+      console.log('Template updated successfully:', updatedTemplate);
+    } catch (err) {
+      console.error('Error updating template:', err);
+      setUpdateError(err instanceof Error ? err.message : 'Failed to update template');
+      throw err; // Re-throw to let the form handle it
     }
   };
 
-  const handleUseTemplate = () => {
-    // TODO: Implement "Use this template" functionality
-    console.log('Using template:', templateId);
-    router.push('/designs');
-  };
+  if (loading) {
+    return (
+      <div className="container py-8">
+        <div className="text-center py-12">
+          <p className="text-gray-500">Loading template...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !template) {
+    return (
+      <div className="container py-8">
+        <div className="text-center py-12">
+          <p className="text-red-600">{error || 'Template not found'}</p>
+          <Button variant="outline" onClick={() => router.push('/templates')} className="mt-4">
+            Back to Templates
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container py-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-1">{template.name}</h1>
+          <div className="flex items-center gap-3 mb-2">
+            <h1 className="text-3xl font-bold text-gray-900">{template.name}</h1>
+            <TemplateStatusBadge status={template.status} />
+          </div>
           <p className="text-gray-600 capitalize">{template.channel} Template</p>
         </div>
         <div className="flex gap-3">
           <Button variant="outline" onClick={() => router.push('/templates')}>
             Back to Templates
           </Button>
-          <Button variant="primary" onClick={handleUseTemplate}>
-            Use This Template
-          </Button>
         </div>
       </div>
 
-      {/* Main Editor Layout */}
-      <div className="grid grid-cols-12 gap-6">
-        {/* Left Sidebar - Tools & Layers */}
-        <div className="col-span-3 space-y-4">
-          <CanvasToolbar />
-          <LayerList
-            layers={canvasState.layers}
-            selectedLayerId={canvasState.selectedLayerId}
-            onLayerSelect={handleLayerSelect}
-          />
-        </div>
+      <div className="space-y-6">
+        {/* Metadata Section */}
+        <Card>
+          <CardHeader>
+            <h2 className="text-xl font-semibold">Template Details</h2>
+          </CardHeader>
+          <CardBody>
+            {updateError && (
+              <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-800">{updateError}</p>
+              </div>
+            )}
+            <TemplateForm
+              initialValues={{
+                name: template.name,
+                channel: template.channel,
+                status: template.status,
+              }}
+              onSubmit={handleUpdateTemplate}
+              submitLabel="Update Template"
+            />
+          </CardBody>
+        </Card>
 
-        {/* Center - Canvas */}
-        <div className="col-span-6">
-          <Canvas state={canvasState} onLayerSelect={handleLayerSelect} />
-        </div>
+        {/* Canvas Editor Placeholder */}
+        <CanvasEditorPlaceholder />
 
-        {/* Right Sidebar - Properties & AI Helper */}
-        <div className="col-span-3 space-y-4">
-          <PropertyPanel selectedLayer={selectedLayer} />
-          <AICopyHelper />
-        </div>
+        {/* AI Copy Helper Placeholder */}
+        <AICopyHelperPlaceholder />
       </div>
     </div>
   );

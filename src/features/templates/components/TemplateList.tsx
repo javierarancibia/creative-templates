@@ -19,6 +19,15 @@ export function TemplateList({ templates }: TemplateListProps) {
     );
   }
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {templates.map((template) => (
@@ -32,10 +41,10 @@ export function TemplateList({ templates }: TemplateListProps) {
                 <h3 className="font-semibold text-lg">{template.name}</h3>
                 <TemplateStatusBadge status={template.status} />
               </div>
-              <div className="flex items-center gap-2">
-                <Badge variant="default">{template.channel}</Badge>
+              <div className="flex items-center justify-between">
+                <Badge variant="default" className="capitalize">{template.channel}</Badge>
                 <span className="text-gray-500 text-xs">
-                  {new Date(template.createdAt).toLocaleDateString()}
+                  Updated {formatDate(template.updatedAt)}
                 </span>
               </div>
             </CardBody>
