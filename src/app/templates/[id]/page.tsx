@@ -8,6 +8,7 @@ import { TemplateForm } from '@/features/templates/components/TemplateForm';
 import { TemplateStatusBadge } from '@/features/templates/components/TemplateStatusBadge';
 import { Template, TemplateChannel, TemplateStatus } from '@/features/templates/types';
 import { fetchTemplate, updateTemplate, updateTemplateCanvas } from '@/features/templates/api';
+import { createDesign } from '@/features/designs/api';
 import { CanvasEditor } from '@/features/canvas/components/CanvasEditor';
 import { CanvasState, createEmptyCanvas } from '@/features/canvas/canvasTypes';
 
@@ -36,6 +37,7 @@ export default function TemplateDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [updateError, setUpdateError] = useState<string | null>(null);
   const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [creatingDesign, setCreatingDesign] = useState(false);
 
   useEffect(() => {
     async function loadTemplate() {
@@ -90,6 +92,32 @@ export default function TemplateDetailPage() {
     }
   };
 
+  const handleCreateDesign = async () => {
+    if (!template) return;
+
+    try {
+      setCreatingDesign(true);
+      const design = await createDesign({
+        name: `${template.name} - Design`,
+        channel: template.channel,
+        templateId: template.id,
+        status: 'draft',
+        canvas: template.canvas || createEmptyCanvas(),
+      });
+
+      // Navigate to the new design page
+      router.push(`/designs/${design.id}`);
+    } catch (err) {
+      console.error('Error creating design:', err);
+      setSaveMessage({
+        type: 'error',
+        text: err instanceof Error ? err.message : 'Failed to create design',
+      });
+    } finally {
+      setCreatingDesign(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="container py-8">
@@ -125,6 +153,13 @@ export default function TemplateDetailPage() {
           <p className="text-gray-600 capitalize">{template.channel} Template</p>
         </div>
         <div className="flex gap-3">
+          <Button
+            variant="primary"
+            onClick={handleCreateDesign}
+            disabled={creatingDesign}
+          >
+            {creatingDesign ? 'Creating...' : 'Create Design from Template'}
+          </Button>
           <Button variant="outline" onClick={() => router.push('/templates')}>
             Back to Templates
           </Button>
