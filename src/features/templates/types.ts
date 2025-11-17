@@ -1,5 +1,7 @@
 // Template-related types aligned with database schema
 
+import type { CanvasState } from '../canvas/canvasTypes';
+
 /**
  * Social media channel types supported by templates
  */
@@ -19,9 +21,7 @@ export interface Template {
   name: string;
   channel: TemplateChannel;
   status: TemplateStatus;
-  // TODO: Import CanvasState from features/canvas/canvasTypes when available
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  canvas: any;
+  canvas: CanvasState | null;
   createdAt: string; // ISO 8601 timestamp
   updatedAt: string; // ISO 8601 timestamp
 }
@@ -34,8 +34,7 @@ export interface TemplateRow {
   name: string;
   channel: TemplateChannel;
   status: TemplateStatus;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  canvas: any;
+  canvas: CanvasState | null;
   created_at: string;
   updated_at: string;
 }
@@ -47,8 +46,7 @@ export interface TemplateFormData {
   name: string;
   channel: TemplateChannel;
   status: TemplateStatus;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  canvas?: any;
+  canvas?: CanvasState | null;
 }
 
 /**

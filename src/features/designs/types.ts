@@ -1,6 +1,7 @@
 // Design-related types aligned with database schema
 
 import type { TemplateChannel } from '../templates/types';
+import type { CanvasState } from '../canvas/canvasTypes';
 
 /**
  * Design status types
@@ -17,9 +18,7 @@ export interface Design {
   name: string;
   channel: TemplateChannel;
   status: DesignStatus;
-  // TODO: Import CanvasState from features/canvas/canvasTypes when available
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  canvas: any;
+  canvas: CanvasState | null;
   createdAt: string; // ISO 8601 timestamp
   updatedAt: string; // ISO 8601 timestamp
 }
@@ -33,8 +32,7 @@ export interface DesignRow {
   name: string;
   channel: TemplateChannel;
   status: DesignStatus;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  canvas: any;
+  canvas: CanvasState | null;
   created_at: string;
   updated_at: string;
 }
@@ -47,8 +45,7 @@ export interface DesignFormData {
   templateId?: string | null;
   channel: TemplateChannel;
   status: DesignStatus;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  canvas?: any;
+  canvas?: CanvasState | null;
 }
 
 /**

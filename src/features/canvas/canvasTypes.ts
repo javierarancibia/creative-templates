@@ -1,50 +1,80 @@
 // Canvas-related types
-export interface CanvasLayer {
+
+/**
+ * Supported layer types
+ */
+export type LayerType = 'text' | 'image';
+
+/**
+ * Base properties shared by all layer types
+ */
+export interface BaseLayer {
   id: string;
-  type: 'text' | 'image' | 'shape';
-  name: string;
-  x: number;
-  y: number;
+  type: LayerType;
+  x: number; // position x
+  y: number; // position y
   width: number;
   height: number;
-  rotation: number;
-  opacity: number;
-  visible: boolean;
-  locked: boolean;
+  rotation: number; // degrees
+  opacity: number; // 0-1
   zIndex: number;
 }
 
-export interface TextLayer extends CanvasLayer {
+/**
+ * Text layer with typography properties
+ */
+export interface TextLayer extends BaseLayer {
   type: 'text';
-  content: string;
+  text: string;
   fontSize: number;
-  fontFamily: string;
-  fontWeight: string;
+  fontWeight?: 'normal' | 'bold';
   color: string;
   textAlign: 'left' | 'center' | 'right';
 }
 
-export interface ImageLayer extends CanvasLayer {
+/**
+ * Image layer with source and fit properties
+ */
+export interface ImageLayer extends BaseLayer {
   type: 'image';
   src: string;
-  alt?: string;
+  fit: 'contain' | 'cover' | 'fill';
 }
 
-export interface ShapeLayer extends CanvasLayer {
-  type: 'shape';
-  shapeType: 'rectangle' | 'circle' | 'triangle';
-  fill: string;
-  stroke?: string;
-  strokeWidth?: number;
-}
+/**
+ * Union type of all layer types
+ */
+export type Layer = TextLayer | ImageLayer;
 
-export type Layer = TextLayer | ImageLayer | ShapeLayer;
-
+/**
+ * Canvas state containing all layers and canvas properties
+ */
 export interface CanvasState {
-  layers: Layer[];
-  selectedLayerId: string | null;
   width: number;
   height: number;
   backgroundColor: string;
+  layers: Layer[];
+  selectedLayerId?: string | null;
+}
+
+/**
+ * Creates an empty canvas with default dimensions
+ * @param width - Canvas width (default: 1080)
+ * @param height - Canvas height (default: 1080)
+ * @param backgroundColor - Background color (default: '#ffffff')
+ * @returns Empty canvas state
+ */
+export function createEmptyCanvas(
+  width = 1080,
+  height = 1080,
+  backgroundColor = '#ffffff'
+): CanvasState {
+  return {
+    width,
+    height,
+    backgroundColor,
+    layers: [],
+    selectedLayerId: null,
+  };
 }
 

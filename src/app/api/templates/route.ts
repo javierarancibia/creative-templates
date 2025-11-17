@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/server/supabase';
 import { templateRowToTemplate, TemplateRow, TemplateChannel, TemplateStatus } from '@/features/templates/types';
-import { initialCanvasState } from '@/features/canvas/canvasState';
+import { createEmptyCanvas } from '@/features/canvas/canvasTypes';
 
 /**
  * GET /api/templates
@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
       name: body.name.trim(),
       channel: body.channel as TemplateChannel,
       status: (body.status as TemplateStatus) || 'draft',
-      canvas: body.canvas || initialCanvasState,
+      canvas: body.canvas || createEmptyCanvas(),
     };
 
     const { data, error } = await supabase
