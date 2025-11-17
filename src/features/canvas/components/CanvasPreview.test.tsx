@@ -67,8 +67,8 @@ describe('CanvasPreview', () => {
       selectedLayerId: null,
     };
 
-    render(<CanvasPreview canvas={canvas} />);
-    const img = screen.getByRole('img');
+    const { container } = render(<CanvasPreview canvas={canvas} />);
+    const img = container.querySelector('img');
     expect(img).toBeInTheDocument();
     expect(img).toHaveAttribute('src', 'https://via.placeholder.com/500');
   });
