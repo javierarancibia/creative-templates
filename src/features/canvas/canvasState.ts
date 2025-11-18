@@ -96,12 +96,12 @@ export function addImageLayer(
 export function updateLayer(
   state: CanvasState,
   layerId: string,
-  patch: Partial<Layer>
+  patch: Partial<Omit<Layer, 'type'>>
 ): CanvasState {
   return {
     ...state,
     layers: state.layers.map(layer =>
-      layer.id === layerId ? { ...layer, ...patch } : layer
+      layer.id === layerId ? { ...layer, ...patch } as Layer : layer
     ),
   };
 }
