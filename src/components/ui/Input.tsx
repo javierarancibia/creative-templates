@@ -14,9 +14,10 @@ export function Input({ label, error, className = '', ...props }: InputProps) {
         </label>
       )}
       <input
-        className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+        className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent ${
           error ? 'border-red-500' : ''
         } ${className}`}
+        style={{ '--tw-ring-color': '#5222DB' } as React.CSSProperties}
         {...props}
       />
       {error && <p className="mt-1 text-sm text-red-600">{error}</p>}

@@ -46,30 +46,28 @@ export function NavBar() {
         <div className="flex items-center justify-between h-16">
           <Link
             href="/"
-            className="text-xl font-bold text-gray-900 hover:text-blue-600 transition-colors"
+            className="text-xl font-bold text-gray-900 transition-colors cursor-pointer"
           >
-            Creative Templates App
+            Creative Templates
           </Link>
           <div className="flex items-center gap-6">
             {user && (
               <>
                 <Link
                   href="/templates"
-                  className={`font-medium transition-colors ${
-                    pathname?.startsWith('/templates')
-                      ? 'text-blue-600'
-                      : 'text-gray-700 hover:text-blue-600'
-                  }`}
+                  className={`font-medium transition-colors cursor-pointer hover:text-[#5222DB] ${pathname?.startsWith('/templates') }`}
+                  style={pathname?.startsWith('/templates') ? { color: '#5222DB' } : undefined}
                 >
                   Templates
                 </Link>
                 <Link
                   href="/designs"
-                  className={`font-medium transition-colors ${
+                  className={`font-medium transition-colors cursor-pointer hover:text-[#5222DB] ${
                     pathname?.startsWith('/designs')
-                      ? 'text-blue-600'
-                      : 'text-gray-700 hover:text-blue-600'
+                      ? ''
+                      : 'text-gray-700'
                   }`}
+                  style={pathname?.startsWith('/designs') ? { color: '#5222DB' } : undefined}
                 >
                   Designs
                 </Link>
