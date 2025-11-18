@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardHeader, CardBody } from '@/components/ui/Card';
+import { CardHeader, CardBody } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 
 /**
@@ -61,7 +61,7 @@ export function AICopyHelper({ onApplyToSelected, hasSelectedTextLayer }: AICopy
   };
 
   return (
-    <Card>
+    <>
       <CardHeader>
         <h2 className="text-xl font-semibold">AI Copy Helper</h2>
       </CardHeader>
@@ -125,7 +125,7 @@ export function AICopyHelper({ onApplyToSelected, hasSelectedTextLayer }: AICopy
           )}
         </div>
       </CardBody>
-    </Card>
+    </>
   );
 }
 

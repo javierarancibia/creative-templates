@@ -35,7 +35,7 @@ export function CanvasToolbar({ canvas, onChange }: CanvasToolbarProps) {
     <div className="flex items-center gap-2 p-3 bg-white border-b border-gray-200">
       <button
         onClick={handleAddTextLayer}
-        className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-2"
+        className="px-3 py-2 text-sm cursor-pointer font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-2"
         title="Add text layer"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -46,7 +46,7 @@ export function CanvasToolbar({ canvas, onChange }: CanvasToolbarProps) {
 
       <button
         onClick={handleAddImageLayer}
-        className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-2"
+        className="px-3 py-2 text-sm font-medium cursor-pointer text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 flex items-center gap-2"
         title="Add image layer"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -60,25 +60,13 @@ export function CanvasToolbar({ canvas, onChange }: CanvasToolbarProps) {
       <button
         onClick={handleDeleteSelected}
         disabled={!hasSelection}
-        className="px-3 py-2 text-sm font-medium text-red-700 bg-white border border-red-300 rounded hover:bg-red-50 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2"
+        className="px-3 py-2 cursor-pointer text-sm font-medium text-red-700 bg-white border border-red-300 rounded hover:bg-red-50 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2"
         title="Delete selected layer"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
         </svg>
         Delete
-      </button>
-
-      <button
-        onClick={handleSnapToCanvas}
-        disabled={!hasSelection}
-        className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2"
-        title="Snap to canvas edges/center"
-      >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-        </svg>
-        Snap
       </button>
 
       <div className="flex-1" />

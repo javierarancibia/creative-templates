@@ -49,8 +49,9 @@ export function LayerList({ canvas, onSelect, onReorder }: LayerListProps) {
           <div
             key={layer.id}
             className={`p-3 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors ${
-              isSelected ? 'bg-blue-50 border-l-4 border-blue-500' : ''
+              isSelected ? 'border-l-4' : ''
             }`}
+            style={isSelected ? { backgroundColor: '#5222DB20', borderLeftColor: '#5222DB' } : undefined}
             onClick={() => onSelect(layer.id)}
           >
             <div className="flex-1 min-w-0">
@@ -74,7 +75,7 @@ export function LayerList({ canvas, onSelect, onReorder }: LayerListProps) {
                   onReorder(layer.id, 'up');
                 }}
                 disabled={!canMoveUp(layer)}
-                className="p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
+                className="p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
                 title="Bring forward"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -87,7 +88,7 @@ export function LayerList({ canvas, onSelect, onReorder }: LayerListProps) {
                   onReorder(layer.id, 'down');
                 }}
                 disabled={!canMoveDown(layer)}
-                className="p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
+                className="p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
                 title="Send backward"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

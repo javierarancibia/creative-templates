@@ -90,6 +90,18 @@ export function CanvasEditor({ initialCanvas, onSave, onCanvasChange }: CanvasEd
     <div className="flex flex-col h-full">
       {/* Toolbar */}
       <CanvasToolbar canvas={canvas} onChange={handleCanvasChange} />
+      {/* Save button */}
+      {onSave && (
+        <div className="p-4 bg-white border-t border-gray-200">
+          <button
+            onClick={handleSave}
+            disabled={!hasChanges}
+            className="px-4 py-2 text-sm font-medium text-white bg-[#5222DB] rounded hover:bg-[#5222DB] disabled:opacity-50 disabled:cursor-not-allowed hover:cursor-pointer"
+          >
+            {hasChanges ? 'Save Canvas' : 'No Changes'}
+          </button>
+        </div>
+      )}
 
       {/* Main editor area */}
       <div className="flex-1 flex gap-4 p-4 overflow-hidden">
@@ -123,18 +135,6 @@ export function CanvasEditor({ initialCanvas, onSave, onCanvasChange }: CanvasEd
         </div>
       </div>
 
-      {/* Save button */}
-      {onSave && (
-        <div className="p-4 bg-white border-t border-gray-200">
-          <button
-            onClick={handleSave}
-            disabled={!hasChanges}
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {hasChanges ? 'Save Canvas' : 'No Changes'}
-          </button>
-        </div>
-      )}
     </div>
   );
 }

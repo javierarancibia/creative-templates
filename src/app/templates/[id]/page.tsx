@@ -208,7 +208,8 @@ export default function TemplateDetailPage() {
 
         {/* Canvas Editor and AI Copy Helper - Side by Side */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="lg:col-span-2">            <Card>
+          <div className="lg:col-span-2">            
+            <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-semibold">Canvas Editor</h2>
@@ -234,17 +235,16 @@ export default function TemplateDetailPage() {
                   />
                 </div>
               </CardBody>
+              {/* AI Copy Helper - Takes 1/3 of the width */}
+              <div>
+                <AICopyHelper
+                  onApplyToSelected={handleApplyAICopy}
+                  hasSelectedTextLayer={hasSelectedTextLayer}
+                />
+              </div>
             </Card>
           </div>
-
         </div>
-      </div>
-      {/* AI Copy Helper - Takes 1/3 of the width */}
-      <div>
-        <AICopyHelper
-          onApplyToSelected={handleApplyAICopy}
-          hasSelectedTextLayer={hasSelectedTextLayer}
-        />
       </div>
     </div>
   );

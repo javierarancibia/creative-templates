@@ -117,11 +117,23 @@ export default function DesignDetailPage() {
         <div>
           <div className="flex items-center gap-3 mb-2">
             <h1 className="text-3xl font-bold text-gray-900">{design.name}</h1>
+            <button
+              onClick={() => {
+                // TODO: Implement edit name functionality
+                console.log('Edit name clicked');
+              }}
+              className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer text-[#5222DB]"
+              title="Edit design name"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+              </svg>
+            </button>
             <Badge variant={design.status === 'active' ? 'success' : design.status === 'archived' ? 'warning' : 'default'}>
               {design.status}
             </Badge>
           </div>
-          <p className="text-gray-600 capitalize">{design.channel} Design</p>
+          <p className="text-[#5222DB] font-semibold capitalize">{design.channel} Design</p>
         </div>
         <div className="flex gap-3">
           <Button
