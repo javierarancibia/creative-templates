@@ -368,15 +368,6 @@ The project includes a GitHub Actions workflow that automatically runs on every 
 - **No network access required** - All tests use jsdom and mock data
 - **No secrets required** - Workflow is self-contained and simple
 
-### Viewing CI Results
-
-After pushing to GitHub:
-1. Go to your repository on GitHub
-2. Click the **"Actions"** tab
-3. View workflow runs and their status
-4. Green checkmark ✅ = All checks passed
-5. Red X ❌ = Linting or tests failed
-
 ### Local CI Simulation
 
 To run the same checks locally before pushing:
@@ -391,50 +382,5 @@ npm run test:run
 
 Both commands must pass for CI to succeed.
 
-## Deployment
-
-### Deploying to Vercel (Recommended)
-
-1. Push your code to GitHub
-2. Go to [Vercel](https://vercel.com/)
-3. Click **"Import Project"**
-4. Select your GitHub repository
-5. Add environment variables:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-6. Click **"Deploy"**
-
-Vercel will automatically:
-- Build your Next.js app
-- Deploy to a global CDN
-- Provide a production URL
-- Set up automatic deployments on git push
-
-### Other Deployment Options
-
-- **Netlify**: Similar to Vercel, supports Next.js
-- **AWS Amplify**: Good for AWS-integrated projects
-- **Docker**: Use the included Dockerfile (if added)
-- **Self-hosted**: Build with `npm run build` and run with `npm start`
-
-## Contributing
-
-This is a demo project, but if you'd like to contribute:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is for demonstration purposes. Feel free to use it as a reference or starting point for your own projects.
-
-## Contact
-
-For questions or feedback about this project, please open an issue on GitHub.
-
----
 
 **Built with ❤️ using Next.js, TypeScript, Supabase, and Tailwind CSS**
