@@ -41,35 +41,41 @@ export function NavBar() {
   };
 
   return (
-    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <nav className="bg-white/80 backdrop-blur-lg border-b border-gray-100 sticky top-0 z-50 shadow-sm">
       <div className="container">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           <Link
             href="/"
-            className="text-xl font-bold text-gray-900 transition-colors cursor-pointer"
+            className="text-2xl font-bold bg-gradient-to-r from-[#5222DB] to-[#7c3aed] bg-clip-text text-transparent transition-all cursor-pointer hover:scale-105"
           >
             Creative Templates
           </Link>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-8">
             {user && (
               <>
                 <Link
                   href="/templates"
-                  className={`font-medium transition-colors cursor-pointer hover:text-[#5222DB] ${pathname?.startsWith('/templates') }`}
+                  className={`font-semibold transition-all cursor-pointer hover:text-[#5222DB] relative group ${
+                    pathname?.startsWith('/templates') ? '' : 'text-gray-600'
+                  }`}
                   style={pathname?.startsWith('/templates') ? { color: '#5222DB' } : undefined}
                 >
                   Templates
+                  <span className={`absolute -bottom-1 left-0 w-full h-0.5 bg-[#5222DB] transition-transform ${
+                    pathname?.startsWith('/templates') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                  }`}></span>
                 </Link>
                 <Link
                   href="/designs"
-                  className={`font-medium transition-colors cursor-pointer hover:text-[#5222DB] ${
-                    pathname?.startsWith('/designs')
-                      ? ''
-                      : 'text-gray-700'
+                  className={`font-semibold transition-all cursor-pointer hover:text-[#5222DB] relative group ${
+                    pathname?.startsWith('/designs') ? '' : 'text-gray-600'
                   }`}
                   style={pathname?.startsWith('/designs') ? { color: '#5222DB' } : undefined}
                 >
                   Designs
+                  <span className={`absolute -bottom-1 left-0 w-full h-0.5 bg-[#5222DB] transition-transform ${
+                    pathname?.startsWith('/designs') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                  }`}></span>
                 </Link>
               </>
             )}
@@ -78,9 +84,12 @@ export function NavBar() {
               <>
                 {user ? (
                   <div className="flex items-center gap-4">
-                    <span className="text-sm text-gray-600">
-                      {user.email}
-                    </span>
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-full">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      <span className="text-sm font-medium text-gray-700">
+                        {user.email}
+                      </span>
+                    </div>
                     <Button
                       variant="outline"
                       size="sm"
